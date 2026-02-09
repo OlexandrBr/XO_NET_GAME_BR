@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
-            button10 = new Button();
+            btn_updateRoom = new Button();
             btn_createRoom = new Button();
-            textBox1 = new TextBox();
+            txt_roomName = new TextBox();
             label3 = new Label();
             txt_NickName = new TextBox();
             label4 = new Label();
@@ -59,9 +59,9 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(button10);
+            groupBox1.Controls.Add(btn_updateRoom);
             groupBox1.Controls.Add(btn_createRoom);
-            groupBox1.Controls.Add(textBox1);
+            groupBox1.Controls.Add(txt_roomName);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(txt_NickName);
             groupBox1.Controls.Add(label4);
@@ -77,14 +77,15 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Керування";
             // 
-            // button10
+            // btn_updateRoom
             // 
-            button10.Location = new Point(598, 165);
-            button10.Name = "button10";
-            button10.Size = new Size(233, 47);
-            button10.TabIndex = 17;
-            button10.Text = "Оновити кімнати";
-            button10.UseVisualStyleBackColor = true;
+            btn_updateRoom.Location = new Point(598, 165);
+            btn_updateRoom.Name = "btn_updateRoom";
+            btn_updateRoom.Size = new Size(233, 47);
+            btn_updateRoom.TabIndex = 17;
+            btn_updateRoom.Text = "Оновити кімнати";
+            btn_updateRoom.UseVisualStyleBackColor = true;
+            btn_updateRoom.Click += btn_updateRoom_Click;
             // 
             // btn_createRoom
             // 
@@ -94,14 +95,15 @@
             btn_createRoom.TabIndex = 16;
             btn_createRoom.Text = "Створити";
             btn_createRoom.UseVisualStyleBackColor = true;
+            btn_createRoom.Click += btn_createRoom_Click;
             // 
-            // textBox1
+            // txt_roomName
             // 
-            textBox1.Location = new Point(196, 108);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(396, 39);
-            textBox1.TabIndex = 15;
-            textBox1.Text = "My Room";
+            txt_roomName.Location = new Point(196, 108);
+            txt_roomName.Name = "txt_roomName";
+            txt_roomName.Size = new Size(396, 39);
+            txt_roomName.TabIndex = 15;
+            txt_roomName.Text = "MyRoom";
             // 
             // label3
             // 
@@ -303,6 +305,7 @@
             lst_Rooms.Name = "lst_Rooms";
             lst_Rooms.Size = new Size(727, 376);
             lst_Rooms.TabIndex = 0;
+            lst_Rooms.DoubleClick += lst_Rooms_DoubleClick;
             // 
             // Form1
             // 
@@ -347,9 +350,9 @@
         private Button button1;
         private GroupBox groupBox3;
         private ListBox lst_Rooms;
-        private Button button10;
+        private Button btn_updateRoom;
         private Button btn_createRoom;
-        private TextBox textBox1;
+        private TextBox txt_roomName;
         private Label label3;
     }
 }

@@ -108,6 +108,7 @@ namespace Server
                     client.CurrentRoom = newRoom;
                     await BroadcastLobbyList();
                     await client.SendMessageAsync($"ROOM_CREATED|{roomName}");
+                    Console.WriteLine($"Кімната {roomName} створена користувачем {client.Nickname}...");
                     break;
                 case "JOIN_ROOM":
                     string targetRoom = parts[1];
