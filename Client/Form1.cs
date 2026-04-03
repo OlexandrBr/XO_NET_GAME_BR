@@ -21,7 +21,30 @@ namespace Client
         }
         private void SetupCustomLogic()
         {
-            gameButtons = new Button[] { button1, button2, button3, button4, button5, button6, button7, button8, button9 };
+            gameButtons = new Button[9];
+
+            int startX = 40;
+            int startY = 40;
+            int size = 100;
+            int gap = 10;
+
+            for (int i = 0; i < 9; i++)
+            {
+                int row = i / 3;
+                int col = i % 3;
+
+                Button btn = CreateGameButton(
+                    startX + col * (size + gap),
+                    startY + row * (size + gap)
+                );
+
+                btn.Name = $"button{i + 1}";
+                btn.Tag = i;
+
+                gameButtons[i] = btn;
+                groupBox2.Controls.Add(btn);
+            }
+
             groupBox2.Enabled = false;
             groupBox3.Enabled = false;
         }
@@ -43,22 +66,21 @@ namespace Client
         private async void button1_Click(object sender, EventArgs e)
         {
             if (!groupBox2.Enabled)
-            { 
+            {
                 MessageBox.Show("Ви не можете зробити хід зараз!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             Button btn = (Button)sender;
+
             if (!string.IsNullOrEmpty(btn.Text))
             {
-                MessageBox.Show("Ця клітинка вже зайнята оберіть іншу!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ця клітинка вже зайнята! Оберіть іншу!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            int index = Array.IndexOf(gameButtons, btn);
-            if (index != -1)
-            { 
-                await SendPacket($"MOVE|{index}");
-            }
+
+            int index = (int)btn.Tag;
+            await SendPacket($"MOVE|{index}");
         }
 
         private async void btn_Connect_Click(object sender, EventArgs e)
@@ -162,6 +184,19 @@ namespace Client
                 case "ERROR":
                     MessageBox.Show($"Помилка від сервера: {parts[1]}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
+                case "LEADERBOARD":
+                    listBoxLeaderboard.Items.Clear();
+
+                    if (parts.Length > 1 && !string.IsNullOrWhiteSpace(parts[1]))
+                    {
+                        string[] leaders = parts[1].Split(';');
+                        listBoxLeaderboard.Items.AddRange(leaders);
+                    }
+                    else
+                    {
+                        listBoxLeaderboard.Items.Add("Поки що немає результатів");
+                    }
+                    break;
             }
         }
 
@@ -233,6 +268,12 @@ namespace Client
         private async void btn_updateRoom_Click(object sender, EventArgs e)
         {
             await SendPacket("REFRESH_LOBBY");
+        }
+
+        private async void button10_Click(object sender, EventArgs e)
+        {
+            listBoxLeaderboard.Items.Clear();
+            await SendPacket("GET_LEADERBOARD");
         }
     }
 }

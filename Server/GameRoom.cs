@@ -48,19 +48,45 @@ namespace Server
 
             if (CheckWin(symbolId))
             {
-                await Broadcast($"WIN|{player.Nickname}");
+                string winnerNick = currentPlayer!.Nickname;
+                string loserNick = (currentPlayer == Player1 ? Player2 : Player1)?.Nickname ?? "";
+
+                await Broadcast($"WIN|{winnerNick}");
+
+                LeaderboardManager.AddWin(winnerNick);
+
+                if (!string.IsNullOrEmpty(loserNick))
+                    LeaderboardManager.AddLoss(loserNick);
+
                 await EndGame();
             }
             else if (board.All(x => x != 0))
             {
                 await Broadcast("DRAW");
+
+                if (Player1 != null)
+                    LeaderboardManager.AddDraw(Player1.Nickname);
+
+                if (Player2 != null)
+                    LeaderboardManager.AddDraw(Player2.Nickname);
+
                 await EndGame();
             }
             else
-            { 
+            {
                 currentPlayer = (currentPlayer == Player1) ? Player2 : Player1;
-                string nextTurnNick = currentPlayer!.Nickname;
+
+                if (currentPlayer == null)
+                {
+                    return;
+                }
+
+                string nextTurnNick = currentPlayer.Nickname;
                 await Broadcast($"TURN|{nextTurnNick}");
+            }
+            if (Player1 == null || Player2 == null)
+            {
+                return;
             }
         }
 
@@ -105,7 +131,13 @@ namespace Server
         private async Task EndGame()
         {
             Player1.CurrentRoom = null;
-            if(Player2 != null) Player2.CurrentRoom = null;
+
+            if (Player2 != null)
+                Player2.CurrentRoom = null;
+
+            Program.rooms.TryRemove(Name, out _);
+
+            Console.WriteLine($"Комната {Name} удалена");
         }
 
         private async Task Broadcast(string msg)

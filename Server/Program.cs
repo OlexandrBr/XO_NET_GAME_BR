@@ -8,10 +8,15 @@ namespace Server
     internal class Program
     {
         static ConcurrentDictionary<Guid, ClientObject> clients = new ConcurrentDictionary<Guid, ClientObject>();
-        static ConcurrentDictionary<string, GameRoom> rooms = new ConcurrentDictionary<string, GameRoom>();
+        public static ConcurrentDictionary<string, GameRoom> rooms = new ConcurrentDictionary<string, GameRoom>();
 
         static async Task Main(string[] args)
         {
+
+            LeaderboardManager.Load();
+
+
+
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.InputEncoding = System.Text.Encoding.UTF8;
 
@@ -136,6 +141,13 @@ namespace Server
                 case "REFRESH_LOBBY":
                     await SendLobbyList(client);
                     break;
+
+                case "GET_LEADERBOARD":
+                    {
+                        string data = LeaderboardManager.GetLeaderboardText();
+                        await client.SendMessageAsync(data);
+                        break;
+                    }
             }
         }
 
